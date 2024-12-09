@@ -1,27 +1,4 @@
 <style>
-/* Adjust the size and alignment of the navbar toggler */
-.navbar-toggler {
-    padding: 0.1rem;
-    font-size: 1rem;
-    border: none; /* Optional: Remove border */
-    background-color: transparent; /* Match the background */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute; /* Allow precise positioning */
-    top: 50%; /* Vertically center the toggle button */
-    right: 1rem; /* Place on the right side */
-    transform: translateY(-50%); /* Adjust for vertical centering */
-    z-index: 1000; /* Ensure it stays above other elements */
-}
-
-/* Resize the toggle icon */
-.navbar-toggler-icon {
-    width: 1rem; /* Adjust the size */
-    height: 1.5rem; /* Adjust the size */
-    background-size: cover; /* Ensure proper scaling */
-}
-
 /* Change the color of the navbar toggle lines to white */
 .navbar-toggler-icon {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
@@ -32,7 +9,7 @@
 }
 
 .dropdown-item {
-    color: #FEA116; /* Change text color to orange */
+    color: #FEA116; /* Change text color to white for visibility */
 }
 
 .dropdown-item:hover {
@@ -54,17 +31,17 @@
 
 <div class="container-fluid bg-dark px-0">
     <div class="row gx-0">
-        <div class="col-12 bg-dark d-flex align-items-center position-relative">
-            <!-- Brand -->
-            <a href="index.php" class="navbar-brand w-100 text-center">
-                <h1 class="m-0 text-primary text-uppercase">Rio Management System</h1>
-            </a>
+        <div class="col-lg-6 bg-dark d-flex align-items-center">
+            <!-- Brand and Toggle Button -->
+            <a href="index.php" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
+        <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
+               </a>
             <!-- Toggle button visible only on mobile -->
-            <button type="button" class="navbar-toggler d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <button type="button" class="navbar-toggler ms-3 d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
-        <div class="col-12">
+        <div class="col-lg-6">
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
@@ -76,7 +53,7 @@
                         <a href="contact.php" class="nav-item nav-link">Contact</a>
                         <a href="check_status.php" class="nav-item nav-link">Status</a>
                     </div>
-                 <!-- Navbar container -->
+                    <!-- Navbar container -->
   <div class="container">
    
    <!-- Navbar items -->
