@@ -1,7 +1,7 @@
 <style>
   /* Adjust the size and alignment of the navbar toggler */
 .navbar-toggler {
-    
+    padding: 0.1rem;
     font-size: 1rem;
     border: none; /* Optional: Remove border */
     background-color: transparent; /* Match the background */
@@ -12,7 +12,7 @@
 
 /* Resize the toggle icon */
 .navbar-toggler-icon {
-    width: 1.5rem; /* Adjust the size */
+    width: 1rem; /* Adjust the size */
     height: 1.5rem; /* Adjust the size */
     background-size: cover; /* Ensure proper scaling */
 }
