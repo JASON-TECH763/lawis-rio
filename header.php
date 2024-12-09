@@ -32,62 +32,80 @@
     transform: translateY(-50%); /* Center the toggle vertically */
 }
 
-@media (max-width: 576px) {
-    .navbar-brand h1 {
-        font-size: 1.25rem;
-        padding: 1rem;
+    /* Existing styles remain the same */
+    
+    /* Add these new styles */
+    @media (max-width: 991px) {
+        .navbar-collapse {
+            background-color: #14165b;
+            padding: 1rem;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .dropdown-menu {
+            position: static !important;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .nav-item.dropdown {
+            width: 100%;
+        }
+
+        .profile-pic {
+            padding-left: 0.5rem;
+        }
     }
-}
+
 </style>
 
 <div class="container-fluid bg-dark px-0">
     <div class="row gx-0">
         <div class="col-lg-6 bg-dark d-flex align-items-center">
-            <!-- Brand and Toggle Button -->
             <a href="index.php" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
                 <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
-                <!-- Toggle button visible only on mobile -->
                 <button type="button" class="navbar-toggler ms-3 d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </a>
         </div>
         <div class="col-lg-6">
-            <!-- Navbar -->
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-                    <div class="navbar-nav">
+                    <div class="navbar-nav w-100">
                         <a href="index.php" class="nav-item nav-link active">Home</a>
                         <a href="about.php" class="nav-item nav-link">About</a>
                         <a href="service.php" class="nav-item nav-link">Services</a>
                         <a href="room.php" class="nav-item nav-link">Rooms</a>
                         <a href="contact.php" class="nav-item nav-link">Contact</a>
                         <a href="check_status.php" class="nav-item nav-link">Status</a>
-                    </div>
-                    <div class="container">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
-                                    <span class="fw-bold">Login</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
-                                    <div class="dropdown-user-scroll scrollbar-outer">
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="staff">
-                                            <i class="fas fa-user-tie"></i> Staff
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="customer">
-                                            <i class="fas fa-users"></i> Customer
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="admin">
-                                            <i class="fas fa-user-shield"></i> Admin
-                                        </a>
-                                    </div>
-                                </ul>
-                            </li>
-                        </ul>
+                        
+                        <!-- Login Dropdown -->
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
+                                <span class="fw-bold">Login</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
+                                <div class="dropdown-user-scroll scrollbar-outer">
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="staff">
+                                        <i class="fas fa-user-tie"></i> Staff
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="customer">
+                                        <i class="fas fa-users"></i> Customer
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="admin">
+                                        <i class="fas fa-user-shield"></i> Admin
+                                    </a>
+                                </div>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -95,26 +113,45 @@
     </div>
 </div>
 
-
 <!-- JavaScript to toggle the dropdown -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
     const loginTrigger = document.getElementById('loginTrigger');
     const loginDropdown = document.getElementById('loginDropdown');
 
     // Toggle the dropdown on click
     loginTrigger.addEventListener('click', function (e) {
-      e.preventDefault();
-      loginDropdown.style.display = loginDropdown.style.display === 'none' ? 'block' : 'none';
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Check if we're in mobile view
+        if (window.innerWidth <= 991) {
+            // Use slideToggle-like effect
+            if (loginDropdown.style.display === 'block') {
+                loginDropdown.style.display = 'none';
+            } else {
+                loginDropdown.style.display = 'block';
+            }
+        } else {
+            // Desktop behavior
+            loginDropdown.style.display = loginDropdown.style.display === 'none' ? 'block' : 'none';
+        }
     });
 
     // Close dropdown if clicked outside
     document.addEventListener('click', function (e) {
-      if (!loginTrigger.contains(e.target) && !loginDropdown.contains(e.target)) {
-        loginDropdown.style.display = 'none';
-      }
-    }); 
-  });
+        if (!loginTrigger.contains(e.target) && !loginDropdown.contains(e.target)) {
+            loginDropdown.style.display = 'none';
+        }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 991) {
+            loginDropdown.style.display = 'none';
+        }
+    });
+});
 </script>
 
 
