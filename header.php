@@ -1,4 +1,22 @@
 <style>
+  /* Adjust the size and alignment of the navbar toggler */
+.navbar-toggler {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none; /* Optional: Remove border */
+    background-color: transparent; /* Match the background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Resize the toggle icon */
+.navbar-toggler-icon {
+    width: 1.5rem; /* Adjust the size */
+    height: 1.5rem; /* Adjust the size */
+    background-size: cover; /* Ensure proper scaling */
+}
+
 /* Change the color of the navbar toggle lines to white */
 .navbar-toggler-icon {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
