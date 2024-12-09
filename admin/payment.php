@@ -15,7 +15,7 @@ if (!isset($_GET['order_id'])) {
 // Fetch order details and customer information
 $order_id = intval($_GET['order_id']);
 $order_details = [];
-$sql = "SELECT od.*, o.customer_id, c.name AS customer_name, c.email AS customer_email
+$sql = "SELECT od.*, o.customer_id, o.reserve_date, o.reserve_time, c.name AS customer_name, c.email AS customer_email
         FROM order_details od
         JOIN orders o ON od.order_id = o.order_id
         JOIN customer c ON o.customer_id = c.id
@@ -31,7 +31,9 @@ while ($row = $result->fetch_assoc()) {
     if (!$customer_info) {
         $customer_info = [
             'name' => $row['customer_name'],
-            'email' => $row['customer_email']
+            'email' => $row['customer_email'],
+            'reserve_date' => $row['reserve_date'],
+            'reserve_time' => $row['reserve_time']
         ];
     }
     $order_details[] = $row;
@@ -128,9 +130,11 @@ if (isset($_POST['confirm_payment'])) {
                             <h3 class="fw-bold mb-3">Order Summary</h3>
                             <h6 class="op-7 mb-2">Order Details</h6>
                             <?php if ($customer_info): ?>
-                                <p><strong>Customer Name:</strong> <?php echo htmlspecialchars($customer_info['name']); ?></p>
-                                <p><strong>Email:</strong> <?php echo htmlspecialchars($customer_info['email']); ?></p>
-                            <?php endif; ?>
+    <p><strong>Customer Name:</strong> <?php echo htmlspecialchars($customer_info['name']); ?></p>
+    <p><strong>Email:</strong> <?php echo htmlspecialchars($customer_info['email']); ?></p>
+    <p><strong>Reserve Date:</strong> <?php echo date('F d, Y', strtotime($customer_info['reserve_date'])); ?></p>
+    <p><strong>Reserve Time:</strong> <?php echo date('h:i A', strtotime($customer_info['reserve_time'])); ?></p>
+                    <?php endif; ?>
                         </div>
                     </div>
                     <div class="row">
