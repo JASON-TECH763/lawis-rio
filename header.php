@@ -1,5 +1,5 @@
 <style>
-  /* Adjust the size and alignment of the navbar toggler */
+/* Adjust the size and alignment of the navbar toggler */
 .navbar-toggler {
     padding: 0.1rem;
     font-size: 1rem;
@@ -8,6 +8,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: absolute; /* Place the toggle button absolutely */
+    top: 50%; /* Vertically center the toggle button */
+    left: 1rem; /* Adjust horizontal position */
+    transform: translateY(-50%); /* Adjust for centering */
+    z-index: 1000; /* Ensure it stays above other elements */
 }
 
 /* Resize the toggle icon */
@@ -22,28 +27,22 @@
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
-.dropdown-menu {
-    background-color: #14165b; /* Change background color */
-}
-
-.dropdown-item {
-    color: #FEA116; /* Change text color to white for visibility */
-}
-
-.dropdown-item:hover {
-    background-color: #FEA116; /* Optional: Lighter shade on hover */
-    color: #fff; /* Ensure text stays white */
-}
-
-.profile-pic {
-    color: #fff; /* Change login text to white */
-}
-
-@media (max-width: 576px) {
-    .navbar-brand h1 {
-        font-size: 1.25rem;
-        padding: 1rem;
+@media (min-width: 576px) {
+    .navbar-toggler {
+        display: none; /* Hide the toggler for larger screens */
     }
+}
+
+.navbar-brand {
+    display: flex;
+    justify-content: center;
+    width: 100%; /* Center the brand title */
+}
+
+.navbar-brand h1 {
+    font-size: 1.25rem;
+    color: white;
+    text-align: center;
 }
 </style>
 
