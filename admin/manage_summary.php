@@ -304,7 +304,11 @@ if ($result_orders->num_rows > 0) {
         ?>
             <tr>
                 <td><?php echo $row['order_id']; ?></td>
-                <td><?php echo date('Y-m-d h:i A', strtotime($row['order_date'])); ?></td>
+                <td><?php 
+    $orderDate = new DateTime($row['order_date']);
+    $orderDate->setTimezone(new DateTimeZone('Asia/Manila'));
+    echo $orderDate->format('Y-m-d h:i A'); 
+?></td>
                 <td><?php echo htmlspecialchars($row['customer_email']); ?></td>
                 <td><?php echo date('Y-m-d', strtotime($row['reserve_date'])); ?></td>  <!-- Reserve Date -->
                 <td><?php echo date('h:i A', strtotime($row['reserve_time'])); ?></td>  <!-- Reserve Time -->
