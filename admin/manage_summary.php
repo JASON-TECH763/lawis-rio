@@ -10,7 +10,6 @@ if (!isset($_SESSION['uname'])) {
 
 // Set timezone to Philippines
 date_default_timezone_set('Asia/Manila');
-
 // Include PHPMailer
 require 'phpmailer/vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
@@ -304,7 +303,7 @@ if ($result_orders->num_rows > 0) {
         ?>
             <tr>
                 <td><?php echo $row['order_id']; ?></td>
-                <td><?php echo date('Y-m-d H:i', strtotime($row['order_date'])); ?></td>
+                <td><?php echo date('Y-m-d h:i A', strtotime($row['order_date'])); ?></td>
                 <td><?php echo htmlspecialchars($row['customer_email']); ?></td>
                 <td><?php echo date('Y-m-d', strtotime($row['reserve_date'])); ?></td>  <!-- Reserve Date -->
                 <td><?php echo date('h:i A', strtotime($row['reserve_time'])); ?></td>  <!-- Reserve Time -->
