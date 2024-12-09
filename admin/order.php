@@ -2,7 +2,6 @@
 session_start();
 include("config/connect.php");
 
-
 if (!isset($_SESSION['uname'])) {
     header("location:index.php");
     exit();
@@ -18,7 +17,7 @@ if (isset($_POST['add_order'])) {
     $prod_id = htmlspecialchars($_POST['prod_id']);
     $prod_name = htmlspecialchars($_POST['prod_name']);
     $prod_price = htmlspecialchars($_POST['prod_price']);
-    $quantity = htmlspecialchars($_POST['quantity']); // Get quantity from form
+    $quantity = htmlspecialchars($_POST['quantity']);
 
     if ($quantity <= 0) {
         echo '<script>
@@ -35,7 +34,7 @@ if (isset($_POST['add_order'])) {
             'prod_id' => $prod_id,
             'prod_name' => $prod_name,
             'prod_price' => $prod_price,
-            'quantity' => $quantity // Store quantity
+            'quantity' => $quantity
         ];
 
         echo '<script>
@@ -53,6 +52,7 @@ if (isset($_POST['add_order'])) {
         </script>';
     }
 }
+
 // Handle placing the order
 if (isset($_POST['place_order'])) {
     // Check if there are items in the order
@@ -104,9 +104,8 @@ if (isset($_POST['place_order'])) {
         }
     }
 }
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
