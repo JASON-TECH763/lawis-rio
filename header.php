@@ -1,7 +1,7 @@
 <style>
   /* Adjust the size and alignment of the navbar toggler */
 .navbar-toggler {
-    padding: 0.1rem;
+    
     font-size: 1rem;
     border: none; /* Optional: Remove border */
     background-color: transparent; /* Match the background */
