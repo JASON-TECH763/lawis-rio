@@ -1,4 +1,4 @@
-<style>
+<style> 
 /* Change the color of the navbar toggle lines to white */
 .navbar-toggler-icon {
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
@@ -21,15 +21,11 @@
     color: #fff; /* Change login text to white */
 }
 
-.navbar-brand {
-    position: relative; /* Make this the reference container */
-}
-
 .navbar-toggler {
-    position: absolute; /* Position the button relative to the brand */
-    top: 50%; /* Align vertically in the middle */
-    right: 10px; /* Adjust spacing from the right edge of the brand */
-    transform: translateY(-50%); /* Center the toggle vertically */
+    position: absolute; /* Position toggle button */
+    top: 50%; /* Align vertically */
+    right: 15px; /* Align horizontally relative to the parent */
+    transform: translateY(-50%);
 }
 
 @media (max-width: 576px) {
@@ -46,8 +42,8 @@
             <!-- Brand and Toggle Button -->
             <a href="index.php" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
                 <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
-                <!-- Toggle button visible only on mobile -->
-                <button type="button" class="navbar-toggler ms-3 d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <!-- Toggle button -->
+                <button type="button" class="navbar-toggler d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
             </a>
@@ -64,37 +60,32 @@
                         <a href="contact.php" class="nav-item nav-link">Contact</a>
                         <a href="check_status.php" class="nav-item nav-link">Status</a>
                     </div>
-                    <div class="container">
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
-                                    <span class="fw-bold">Login</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
-                                    <div class="dropdown-user-scroll scrollbar-outer">
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="staff">
-                                            <i class="fas fa-user-tie"></i> Staff
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="customer">
-                                            <i class="fas fa-users"></i> Customer
-                                        </a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="admin">
-                                            <i class="fas fa-user-shield"></i> Admin
-                                        </a>
-                                    </div>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
+                                <span class="fw-bold">Login</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
+                                <div class="dropdown-user-scroll scrollbar-outer">
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="staff">
+                                        <i class="fas fa-user-tie"></i> Staff
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="customer">
+                                        <i class="fas fa-users"></i> Customer
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="admin">
+                                        <i class="fas fa-user-shield"></i> Admin
+                                    </a>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </nav>
-        </div>
-    </div>
-</div>
-
+      
 
 <!-- JavaScript to toggle the dropdown -->
 <script>
