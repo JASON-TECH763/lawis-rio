@@ -109,9 +109,7 @@
                     </div>
                 </div>
             </nav>
-        </div>
-    </div>
-</div>
+      
 
 <!-- JavaScript to toggle the dropdown -->
 <script>
