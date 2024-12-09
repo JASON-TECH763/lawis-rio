@@ -2,6 +2,15 @@
 session_start();
 include("config/connect.php");
 
+// Set timezone to Philippines
+date_default_timezone_set('Asia/Manila');
+
+// Ensure the user is logged in by checking the session
+if (!isset($_SESSION['email'])) {
+    header("Location: index.php");
+    exit;
+}
+
 // Check if order_id is provided
 if (!isset($_GET['order_id'])) {
     die("No order ID provided");
@@ -20,57 +29,90 @@ while ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
-// Process reservation
+
 if (isset($_POST['reserve'])) {
-    $total_price = 0;
-    foreach ($order_details as $detail) {
-        $total_price += floatval($detail['prod_price']) * intval($detail['quantity']);
+    // Fetch the current reservation status for this order
+    $sql_check_status = "SELECT status FROM orders WHERE order_id = ?";
+    $stmt_check_status = $conn->prepare($sql_check_status);
+    $stmt_check_status->bind_param('i', $order_id);
+    $stmt_check_status->execute();
+    $stmt_check_status->bind_result($status);
+    $stmt_check_status->fetch();
+    $stmt_check_status->close();
+
+    // Only proceed with the reservation if the order is temporary
+    if ($status == 'Temporary') {
+        // Update the status to "New Reserved"
+        $sql_update = "UPDATE orders SET status = 'New Reserved' WHERE order_id = ?";
+        $stmt_update = $conn->prepare($sql_update);
+        $stmt_update->bind_param('i', $order_id);
+        
+        if ($stmt_update->execute()) {
+            $_SESSION['reservation_success'] = true;
+            header("Location: " . $_SERVER['PHP_SELF'] . "?order_id=" . $order_id);
+            exit();
+        }
     }
+}
 
-    // Update order status to "Reserved"
-    $sql_update = "UPDATE orders SET status = 'New Reserved' WHERE order_id = ?";
-    $stmt_update = $conn->prepare($sql_update);
-    $stmt_update->bind_param('i', $order_id);
-    $stmt_update->execute();
-    $stmt_update->close();
+if (isset($_POST['cancel'])) {
+    // Delete the temporary order and its details
+    $conn->begin_transaction();
+    try {
+        // Delete order details first
+        $sql_delete_details = "DELETE FROM order_details WHERE order_id = ?";
+        $stmt_delete_details = $conn->prepare($sql_delete_details);
+        $stmt_delete_details->bind_param('i', $order_id);
+        $stmt_delete_details->execute();
 
-    // Set a session variable to show the alert
-    $_SESSION['reservation_success'] = true;
+        // Then delete the order
+        $sql_delete_order = "DELETE FROM orders WHERE order_id = ? AND status = 'Temporary'";
+        $stmt_delete_order = $conn->prepare($sql_delete_order);
+        $stmt_delete_order->bind_param('i', $order_id);
+        $stmt_delete_order->execute();
 
-    // Redirect to the same page to display the SweetAlert
-    header("Location: ".$_SERVER['PHP_SELF']."?order_id=".$order_id);
-    exit();
+        $conn->commit();
+        header("Location: order.php");
+        exit();
+    } catch (Exception $e) {
+        $conn->rollback();
+        echo '<script>
+            Swal.fire({
+                title: "Error!",
+                text: "Failed to cancel the order.",
+                icon: "error"
+            });
+        </script>';
+    }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Rio Management System</title>
-    <meta
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-      name="viewport"
-    />
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="assets/img/a.jpg" type="image/x-icon" />
 
     <!-- Fonts and icons -->
     <script src="assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
-      WebFont.load({
-        google: { families: ["Public Sans:300,400,500,600,700"] },
-        custom: {
-          families: [
-            "Font Awesome 5 Solid",
-            "Font Awesome 5 Regular",
-            "Font Awesome 5 Brands",
-            "simple-line-icons",
-          ],
-          urls: ["assets/css/fonts.min.css"],
-        },
-        active: function () {
-          sessionStorage.fonts = true;
-        },
-      });
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
     </script>
 
     <!-- CSS Files -->
@@ -78,10 +120,11 @@ if (isset($_POST['reserve'])) {
     <link rel="stylesheet" href="assets/css/plugins.min.css" />
     <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
     <link rel="stylesheet" href="assets/css/demo.css" />
+
     <!-- SweetAlert -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </head>
-  <body>
+</head>
+<body>
     <div class="wrapper">
         <!-- Sidebar -->
         <?php include("include/sidenavigation.php");?>
@@ -138,14 +181,68 @@ if (isset($_POST['reserve'])) {
                                                     <td colspan="4" class="text-right"><strong>Total:</strong></td>
                                                     <td><?php echo number_format($total_price, 2); ?></td>
                                                 </tr>
+                                                <?php
+                                                // Fetch the reserve date and time for this order
+                                                $sql_fetch = "SELECT reserve_date, reserve_time FROM orders WHERE order_id = ?";
+                                                $stmt_fetch = $conn->prepare($sql_fetch);
+                                                $stmt_fetch->bind_param('i', $order_id);
+                                                $stmt_fetch->execute();
+                                                $stmt_fetch->bind_result($reserve_date, $reserve_time);
+                                                $stmt_fetch->fetch();
+                                                $stmt_fetch->close();
+                                                ?>
+                                                <tr>
+                                                    <td colspan="4" class="text-right"><strong>Reservation Date:</strong></td>
+                                                    <td><?php echo $reserve_date ? date('F j, Y', strtotime($reserve_date)) : 'Not Reserved'; ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-right"><strong>Reservation Time:</strong></td>
+                                                    <td><?php echo $reserve_time ? date('g:i A', strtotime($reserve_time)) : 'Not Reserved'; ?></td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <!-- Reservation Form -->
-                                    <form method="POST" action="">
-                                        <button type="submit" name="reserve" class="btn btn-primary">Reserve</button>
-                                    </form>
-                              </div>
+<form method="POST" action="" style="display: inline-block;">
+    <div class="button-group">
+        <button type="submit" name="reserve" class="btn btn-primary">Reserve</button>
+        <a href="order.php" class="btn btn-danger cancel-btn">Cancel</a>
+    </div>
+</form>
+
+<!-- Add this style in the head section -->
+<style>
+    .button-group {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .button-group button,
+    .button-group a {
+        flex: 0 1 auto;
+    }
+</style>
+
+<!-- Add this script before the closing body tag -->
+<script>
+document.querySelector('.cancel-btn').addEventListener('click', function(e) {
+    e.preventDefault();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to cancel this reservation?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, cancel it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'order.php';
+        }
+    });
+});
+</script>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -178,10 +275,6 @@ if (isset($_POST['reserve'])) {
             }
         });
     </script>
-    <?php
-        // Unset the session variable to prevent the alert from showing again
-        unset($_SESSION['reservation_success']);
-    endif;
-    ?>
-  </body>
+    <?php unset($_SESSION['reservation_success']); endif; ?>
+</body>
 </html>

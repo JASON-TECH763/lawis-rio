@@ -8,6 +8,12 @@ if (!isset($_SESSION['email'])) {
     exit;
 }
 
+// Set the timezone to Philippines
+date_default_timezone_set('Asia/Manila');
+
+// Get the current date in the Philippines
+$current_date = date('Y-m-d');
+
 // Retrieve the logged-in user's email
 $email = $_SESSION['email'];
 
@@ -21,15 +27,6 @@ $result_customer = $stmt_customer->get_result();
 if ($result_customer->num_rows === 1) {
     $row_customer = $result_customer->fetch_assoc();
     $customer_id = $row_customer['id']; // Correct fetching of customer ID
-
-    // Debug: Check if customer ID is fetched correctly
-    if ($customer_id) {
-        // echo "Customer ID fetched successfully: " . $customer_id; // Debug line
-    } else {
-        // Handle error
-        echo '<script>window.onload = function() { Swal.fire({ title: "Error!", text: "Unable to fetch customer ID.", icon: "error" }); };</script>';
-        exit;
-    }
 
     // Handle adding product to the order
     if (isset($_POST['add_order'])) {
@@ -54,58 +51,69 @@ if ($result_customer->num_rows === 1) {
     }
 
     // Handle placing the order
-    if (isset($_POST['place_order'])) {
-        // Check if there are any items in the order
-        if (empty($_SESSION['orders'])) {
-            echo '<script>window.onload = function() { Swal.fire({ title: "Error!", text: "Please add products to your order before placing it.", icon: "error" }); };</script>';
-        } else {
-            // Proceed with placing the order if there are items in the order
-            $sql_order = "INSERT INTO orders (order_date, status, customer_id) VALUES (NOW(), 'Pending', ?)";
-            $stmt_order = $conn->prepare($sql_order);
-            $stmt_order->bind_param('i', $customer_id); // Correct binding as integer
-    
-            if ($stmt_order->execute()) {
-                $order_id = $conn->insert_id;
-    
-                foreach ($_SESSION['orders'] as $order) {
-                    $sql_order_details = "INSERT INTO order_details (order_id, prod_id, prod_name, prod_price, quantity) VALUES (?, ?, ?, ?, ?)";
-                    $stmt_order_details = $conn->prepare($sql_order_details);
-                    
-                    // Ensure correct binding for order details
-                    $stmt_order_details->bind_param(
-                        'issss',
-                        $order_id,
-                        $order['prod_id'],
-                        $order['prod_name'],
-                        $order['prod_price'],
-                        $order['quantity']
-                    );
-    
-                    if (!$stmt_order_details->execute()) {
-                        // Log any errors in order details insertion
-                        // echo "Error: " . $stmt_order_details->error; // Debug line
-                    }
+if (isset($_POST['place_order'])) {
+    // Check if there are any items in the order
+    if (empty($_SESSION['orders'])) {
+        echo '<script>window.onload = function() { Swal.fire({ title: "Error!", text: "Please add products to your order before placing it.", icon: "error" }); };</script>';
+    } else {
+        // Get reservation date and time from POST
+        $reserve_date = $_POST['reserve_date'];
+        $reserve_time = $_POST['reserve_time'];
+
+        // Create the order with 'Temporary' status
+        $sql_order = "INSERT INTO orders (order_date, reserve_date, reserve_time, status, customer_id, customer_email) 
+                      VALUES (NOW(), ?, ?, 'Temporary', ?, ?)";
+        $stmt_order = $conn->prepare($sql_order);
+        $stmt_order->bind_param('ssis', $reserve_date, $reserve_time, $customer_id, $email);
+
+        if ($stmt_order->execute()) {
+            $order_id = $conn->insert_id;
+
+            // Insert order details
+            $all_details_inserted = true;
+            foreach ($_SESSION['orders'] as $order) {
+                $sql_order_details = "INSERT INTO order_details (order_id, prod_id, prod_name, prod_price, quantity) 
+                                    VALUES (?, ?, ?, ?, ?)";
+                $stmt_order_details = $conn->prepare($sql_order_details);
+                $stmt_order_details->bind_param('issss',
+                    $order_id,
+                    $order['prod_id'],
+                    $order['prod_name'],
+                    $order['prod_price'],
+                    $order['quantity']
+                );
+
+                if (!$stmt_order_details->execute()) {
+                    $all_details_inserted = false;
+                    break;
                 }
-    
+            }
 
-            // Clear the session orders
-            unset($_SESSION['orders']);
+            if ($all_details_inserted) {
+                // Clear the session orders
+                unset($_SESSION['orders']);
+                
+                // Redirect to order summary
+                header("Location: order_summary.php?order_id=" . $order_id);
+                exit;
+            } else {
+                // Roll back the order if details insertion failed
+                $sql_delete = "DELETE FROM orders WHERE order_id = ?";
+                $stmt_delete = $conn->prepare($sql_delete);
+                $stmt_delete->bind_param('i', $order_id);
+                $stmt_delete->execute();
 
-            // Redirect to order summary with order_id
-            header("Location: order_summary.php?order_id=" . $order_id);
-            exit;
-        }  else {
-            // Log the error if order placement fails
-            echo '<script>window.onload = function() { Swal.fire({ title: "Error!", text: "Failed to place the order. ' . $stmt_order->error . '", icon: "error" }); };</script>';
+                echo '<script>window.onload = function() { Swal.fire({ 
+                    title: "Error!", 
+                    text: "Failed to create order details.", 
+                    icon: "error" 
+                }); };</script>';
+            }
         }
-        
-       
     }
-  } 
+ }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -137,53 +145,39 @@ if ($result_customer->num_rows === 1) {
     <div class="main-panel">
         <?php include("include/header.php"); ?>
         <div class="container">
-
-        <div class="page-inner">
-    <div class="d-flex align-items-center justify-content-between pt-2 pb-4">
-        <!-- Order List and Information Section -->
-        <div>
-            <h3 class="fw-bold mb-1">Order List</h3>
-            <h6 class="op-7">Information</h6>
-        </div>
-        <!-- Reserve Date and Time Section -->
-        <div class="d-flex align-items-center">
-            <label for="reserve_date" class="fw-bold me-2">Reserve Date:</label>
-            <input type="date" id="reserve_date" name="reserve_date" class="form-control me-4" style="max-width: 200px;" />
-
-            <label for="reserve_time" class="fw-bold me-2">Reserve Time:</label>
-            <input type="time" id="reserve_time" name="reserve_time" class="form-control" style="max-width: 200px;" />
-        </div>
-    </div>
-</div>
-
-<script>
-    // Get today's date and format it as YYYY-MM-DD
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const day = String(today.getDate()).padStart(2, '0');
-    const formattedToday = `${year}-${month}-${day}`;
-
-    // Set the min attribute of the date picker
-    const reserveDate = document.getElementById('reserve_date');
-    reserveDate.setAttribute('min', formattedToday); // Disable all past dates
-    reserveDate.value = formattedToday; // Set default value to today
-</script>
-
-
-
+            <div class="page-inner">
+                <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+                    <div>
+                        <h3 class="fw-bold mb-3">Order List</h3>
+                        <h6 class="op-7 mb-2">Information</h6>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex align-items-center">
-                                
-                               <form method="post" action="">
-                                <button type="submit" name="place_order" class="btn btn-primary"> <i class="fas fa-cart-plus" ></i> Reserve Order</button>
-
-                            </form>
-                            </div>
-                        </div>
+                    <div class="card-header">
+    <div class="d-flex align-items-center">
+        <form method="post" action="" class="d-flex align-items-center w-100">
+        <div class="form-group mb-0 d-flex align-items-end">
+                <button type="submit" name="place_order" class="btn btn-primary">
+                    <i class="fas fa-cart-plus"></i> Place Order
+                </button>
+            </div>
+            <div class="form-group mb-0 mr-3" style="min-width: 200px; text-align: center;">
+                <label for="reserve_date" class="mb-1">Reserve Date</label>
+                <input type="date" name="reserve_date" id="reserve_date" 
+                    class="form-control" value="<?php echo $current_date; ?>" required>
+            </div>
+            
+            <div class="form-group mb-0 mr-3" style="min-width: 150px; text-align: center;">
+                <label for="reserve_time" class="mb-1">Reserve Time</label>
+                <input type="time" name="reserve_time" id="reserve_time" 
+                    class="form-control" required>
+            </div>
+        </form>
+    </div>
+</div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="basic-datatables" class="display table table-striped table-hover" style="width: 100%;">
@@ -260,6 +254,25 @@ if ($result_customer->num_rows === 1) {
 <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 <script src="assets/js/kaiadmin.min.js"></script>
 <script src="assets/js/sweetalert.js"></script>
+
+<script>
+// Get the current date in the Philippines using PHP
+const defaultDate = '<?php echo $current_date; ?>';
+
+// Set the default value of the reserve_date field to the current date
+document.getElementById('reserve_date').value = defaultDate;
+
+// Disable past dates (all dates before the current date)
+document.getElementById('reserve_date').setAttribute('min', defaultDate);
+
+// Ensure that when the date picker is opened, past dates are disabled
+document.getElementById('reserve_date').addEventListener('focus', function() {
+    const input = document.getElementById('reserve_date');
+    input.setAttribute('min', defaultDate); // Reapply the min attribute when the input gains focus
+});
+
+</script>
+
 <script>
 $(document).ready(function () {
     $("#basic-datatables").DataTable({});
