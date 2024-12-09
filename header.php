@@ -76,9 +76,38 @@
                         <a href="contact.php" class="nav-item nav-link">Contact</a>
                         <a href="check_status.php" class="nav-item nav-link">Status</a>
                     </div>
-                </div>
-            </nav>
-      
+                 <!-- Navbar container -->
+  <div class="container">
+   
+   <!-- Navbar items -->
+   <ul class="navbar-nav ms-auto">
+     <!-- Dropdown trigger -->
+     <li class="nav-item dropdown">
+       <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
+         <span class="fw-bold">Login</span>
+       </a>
+
+       <!-- Dropdown menu -->
+       <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
+         <div class="dropdown-user-scroll scrollbar-outer">
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="staff">
+             <i class="fas fa-user-tie"></i> Staff
+           </a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="customer">
+             <i class="fas fa-users"></i> Customer
+           </a>
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="admin">
+             <i class="fas fa-user-shield"></i> Admin
+           </a>
+         </div>
+       </ul>
+     </li>
+   </ul>
+ </div>
+</nav>
 
 <!-- JavaScript to toggle the dropdown -->
 <script>
