@@ -1,31 +1,25 @@
 <style>
-/* Adjust the size and alignment of the navbar toggler */
 .navbar-toggler {
     padding: 0.1rem;
     font-size: 1rem;
-    border: none; /* Optional: Remove border */
-    background-color: transparent; /* Match the background */
+    border: none;
+    background-color: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: absolute; /* Allow precise positioning */
-    top: 50%; /* Vertically center the toggle button */
-    right: 1rem; /* Place on the right side */
-    transform: translateY(-50%); /* Adjust for vertical centering */
-    z-index: 1000; /* Ensure it stays above other elements */
+    position: fixed; /* Keep it fixed in place */
+    top: 15px; /* Adjust positioning */
+    right: 15px; /* Adjust positioning */
+    z-index: 1050; /* Higher z-index to ensure it stays on top */
 }
 
-/* Resize the toggle icon */
 .navbar-toggler-icon {
-    width: 1rem; /* Adjust the size */
-    height: 1.5rem; /* Adjust the size */
-    background-size: cover; /* Ensure proper scaling */
-}
-
-/* Change the color of the navbar toggle lines to white */
-.navbar-toggler-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    background-size: contain;
     background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
+
 
 .dropdown-menu {
     background-color: #14165b; /* Change background color */
@@ -54,18 +48,25 @@
 
 <div class="container-fluid bg-dark px-0">
     <div class="row gx-0">
-        <div class="col-12 bg-dark d-flex align-items-center position-relative">
-            <!-- Brand -->
+        <!-- Brand and Toggle Button -->
+        <div class="col-12 d-flex align-items-center bg-dark position-relative">
             <a href="index.php" class="navbar-brand w-100 text-center">
                 <h1 class="m-0 text-primary text-uppercase">Rio Management System</h1>
             </a>
-            <!-- Toggle button visible only on mobile -->
-            <button type="button" class="navbar-toggler d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <!-- Navbar toggler -->
+            <button
+                class="navbar-toggler d-lg-none"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
+        <!-- Navbar -->
         <div class="col-12">
-            <!-- Navbar -->
             <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
                 <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                     <div class="navbar-nav">
@@ -76,58 +77,55 @@
                         <a href="contact.php" class="nav-item nav-link">Contact</a>
                         <a href="check_status.php" class="nav-item nav-link">Status</a>
                     </div>
-                 <!-- Navbar container -->
-  <div class="container">
-   
-   <!-- Navbar items -->
-   <ul class="navbar-nav ms-auto">
-     <!-- Dropdown trigger -->
-     <li class="nav-item dropdown">
-       <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
-         <span class="fw-bold">Login</span>
-       </a>
-
-       <!-- Dropdown menu -->
-       <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
-         <div class="dropdown-user-scroll scrollbar-outer">
-           <div class="dropdown-divider"></div>
-           <a class="dropdown-item" href="staff">
-             <i class="fas fa-user-tie"></i> Staff
-           </a>
-           <div class="dropdown-divider"></div>
-           <a class="dropdown-item" href="customer">
-             <i class="fas fa-users"></i> Customer
-           </a>
-           <div class="dropdown-divider"></div>
-           <a class="dropdown-item" href="admin">
-             <i class="fas fa-user-shield"></i> Admin
-           </a>
-         </div>
-       </ul>
-     </li>
-   </ul>
- </div>
-</nav>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
+                                <span class="fw-bold">Login</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
+                                <div class="dropdown-user-scroll scrollbar-outer">
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="staff"><i class="fas fa-user-tie"></i> Staff</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="customer"><i class="fas fa-users"></i> Customer</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="admin"><i class="fas fa-user-shield"></i> Admin</a>
+                                </div>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
 
 <!-- JavaScript to toggle the dropdown -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+ document.addEventListener('DOMContentLoaded', function () {
     const loginTrigger = document.getElementById('loginTrigger');
     const loginDropdown = document.getElementById('loginDropdown');
+    const navbarCollapse = document.getElementById('navbarCollapse');
 
     // Toggle the dropdown on click
     loginTrigger.addEventListener('click', function (e) {
-      e.preventDefault();
-      loginDropdown.style.display = loginDropdown.style.display === 'none' ? 'block' : 'none';
+        e.preventDefault();
+        loginDropdown.style.display = loginDropdown.style.display === 'none' ? 'block' : 'none';
     });
 
     // Close dropdown if clicked outside
     document.addEventListener('click', function (e) {
-      if (!loginTrigger.contains(e.target) && !loginDropdown.contains(e.target)) {
-        loginDropdown.style.display = 'none';
-      }
-    }); 
-  });
+        if (!loginTrigger.contains(e.target) && !loginDropdown.contains(e.target)) {
+            loginDropdown.style.display = 'none';
+        }
+    });
+
+    // Ensure the toggle button stays functional
+    navbarCollapse.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+});
+
 </script>
 
 
