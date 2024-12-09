@@ -19,7 +19,7 @@ $payment_amount = floatval($_GET['payment_amount']);
 $change = floatval($_GET['change']);
 
 // Fetch order and customer details
-$sql = "SELECT o.order_id, o.order_date, o.status, c.name, c.email 
+$sql = "SELECT o.order_id, o.order_date, o.status, o.reserve_date, o.reserve_time, c.name, c.email 
         FROM orders o 
         JOIN customer c ON o.customer_id = c.id 
         WHERE o.order_id=?";
@@ -113,10 +113,12 @@ while ($product = $result_products->fetch_assoc()) {
             <p>VAT Reg. TIN: 108-427-007-00008</p>
         </div>
 
-        <!-- Order & Customer Details -->
-        <p><strong>Order Date:</strong> <?php echo date('Y-m-d H:i:s', strtotime($order['order_date'])); ?></p>
-        <p><strong>Customer Name:</strong> <?php echo htmlspecialchars($order['name']); ?></p>
-        <p><strong>Email:</strong> <?php echo htmlspecialchars($order['email']); ?></p>
+       <!-- Order & Customer Details -->
+<p><strong>Order Date:</strong> <?php echo date('Y-m-d H:i:s', strtotime($order['order_date'])); ?></p>
+<p><strong>Reserve Date:</strong> <?php echo date('F d, Y', strtotime($order['reserve_date'])); ?></p>
+<p><strong>Reserve Time:</strong> <?php echo date('h:i A', strtotime($order['reserve_time'])); ?></p>
+<p><strong>Customer Name:</strong> <?php echo htmlspecialchars($order['name']); ?></p>
+<p><strong>Email:</strong> <?php echo htmlspecialchars($order['email']); ?></p>
 
         <!-- Order Table -->
         <table class="receipt-table">
