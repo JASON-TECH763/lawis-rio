@@ -119,6 +119,6 @@ if (substr($request, -4) == '.php') {
                         </div>
                    
                 </div>
-                </nav>
+     
             </div>
         </div>
