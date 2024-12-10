@@ -6,6 +6,7 @@
     
     .dropdown-menu {
         background-color: #14165b; /* Change background color */
+        display: none; /* Ensure dropdown is hidden by default */
     }
     
     .dropdown-item {
@@ -94,7 +95,7 @@
         // Toggle the dropdown on click
         loginTrigger.addEventListener('click', function (e) {
             e.preventDefault();
-            loginDropdown.style.display = loginDropdown.style.display === 'none' ? 'block' : 'none';
+            loginDropdown.style.display = loginDropdown.style.display === 'block' ? 'none' : 'block';
         });
 
         // Close dropdown if clicked outside
