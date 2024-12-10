@@ -38,11 +38,11 @@
 </style>
 <div class="container-fluid bg-dark px-0">
     <div class="row gx-0">
-        <div class="col-lg-6 bg-dark d-flex align-items-center">
+        <div class="col-lg-6 bg-dark d-flex align-items-center position-relative">
             <!-- Brand and Toggle Button -->
             <a href="index.php" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
-        <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
-               </a>
+                <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
+            </a>
             <!-- Toggle button visible only on mobile -->
             <button type="button" class="navbar-toggler ms-3 d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -61,32 +61,31 @@
                         <a href="check_status.php" class="nav-item nav-link">Status</a>
                     </div>
                     <!-- Navbar container -->
-  <div class="container">
-   
-   <!-- Navbar items -->
-   <ul class="navbar-nav ms-auto">
-     <!-- Dropdown trigger -->
-     <li class="nav-item dropdown">
-       <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
-         <span class="fw-bold">Login</span>
-       </a>
+                    <div class="container">
+                        <!-- Navbar items -->
+                        <ul class="navbar-nav ms-auto">
+                            <!-- Dropdown trigger -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
+                                    <span class="fw-bold">Login</span>
+                                </a>
 
-       <!-- Dropdown menu -->
-       <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
-         <div class="dropdown-user-scroll scrollbar-outer">
-           <div class="dropdown-divider"></div>
-           <a class="dropdown-item" href="staff">
-             <i class="fas fa-user-tie"></i> Staff
-           </a>
-           <div class="dropdown-divider"></div>
-           <a class="dropdown-item" href="customer">
-             <i class="fas fa-users"></i> Customer
-           </a>
-           <div class="dropdown-divider"></div>
-           <a class="dropdown-item" href="admin">
-             <i class="fas fa-user-shield"></i> Admin
-           </a>
-         </div>
+                                <!-- Dropdown menu -->
+                                <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
+                                    <div class="dropdown-user-scroll scrollbar-outer">
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="staff">
+                                            <i class="fas fa-user-tie"></i> Staff
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="customer">
+                                            <i class="fas fa-users"></i> Customer
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="admin">
+                                            <i class="fas fa-user-shield"></i> Admin
+                                        </a>
+                                    </div>
        </ul>
      </li>
    </ul>
@@ -114,11 +113,6 @@
   });
 </script>
 
-
-
 </div>                          
-</div>
-</nav>
-</div>
 </div>
 </div>
