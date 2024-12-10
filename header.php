@@ -38,8 +38,9 @@
         /* Ensure the toggle button stays in position */
         .navbar-toggler {
             position: absolute;
-            right: 10px;
-            top: 10px;
+            right: 20px; /* Adjust as needed */
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Center vertically */
             z-index: 1;
         }
     </style>
