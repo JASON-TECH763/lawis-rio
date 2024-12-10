@@ -142,7 +142,7 @@ $order = $result->fetch_assoc();
         <h2>Reservation Confirmed</h2>
         <p>Dear {$order['name']},</p>
         <p>Your reservation for food and drinks has been confirmed. We look forward to serving you!</p>
-        <p><strong>Order Date:</strong> " . date('Y-m-d',($order_date)) . "</p>
+        <p><strong>Order Date:</strong> " . date('Y-m-d H:i:s', strtotime($order_date)) . "</p>
         <p><strong>Total Price:</strong> ₱" . number_format($total_price, 2) . "</p>
         <h3>Product Details:</h3>
         $product_details
@@ -303,7 +303,7 @@ if ($result_orders->num_rows > 0) {
         ?>
             <tr>
                 <td><?php echo $row['order_id']; ?></td>
-                <td><?php echo date('Y-m-d', ($row['order_date'])); ?></td>
+                <td><?php echo date('Y-m-d', strtotime($row['order_date'])); ?></td>
                 <td><?php echo htmlspecialchars($row['customer_email']); ?></td>
                 <td><?php echo date('Y-m-d', strtotime($row['reserve_date'])); ?></td>  <!-- Reserve Date -->
                 <td><?php echo date('h:i A', strtotime($row['reserve_time'])); ?></td>  <!-- Reserve Time -->
