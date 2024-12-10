@@ -1,34 +1,41 @@
 <style>
-/* Change the color of the navbar toggle lines to white */
-.navbar-toggler-icon {
-    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
-}
-
-.dropdown-menu {
-    background-color: #14165b; /* Change background color */
-}
-
-.dropdown-item {
-    color: #FEA116; /* Change text color to white for visibility */
-}
-
-.dropdown-item:hover {
-    background-color: #FEA116; /* Optional: Lighter shade on hover */
-    color: #fff; /* Ensure text stays white */
-}
-
-.profile-pic {
-    color: #fff; /* Change login text to white */
-}
-
-@media (max-width: 576px) {
-    .navbar-brand h1 {
-        font-size: 1.25rem;
-        padding: 1rem;
+    /* Change the color of the navbar toggle lines to white */
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%28255, 255, 255, 1%29' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
     }
-}
-</style>
 
+    .dropdown-menu {
+        background-color: #14165b; /* Change background color */
+    }
+
+    .dropdown-item {
+        color: #FEA116; /* Change text color to white for visibility */
+    }
+
+    .dropdown-item:hover {
+        background-color: #FEA116; /* Optional: Lighter shade on hover */
+        color: #fff; /* Ensure text stays white */
+    }
+
+    .profile-pic {
+        color: #fff; /* Change login text to white */
+    }
+
+    @media (max-width: 576px) {
+        .navbar-brand h1 {
+            font-size: 1.25rem;
+            padding: 1rem;
+        }
+    }
+
+    /* Ensure the toggle button stays in position */
+    .navbar-toggler {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 1;
+    }
+</style>
 <div class="container-fluid bg-dark px-0">
     <div class="row gx-0">
         <div class="col-lg-6 bg-dark d-flex align-items-center">
