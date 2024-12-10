@@ -1,81 +1,51 @@
-<?php
-$request = $_SERVER['REQUEST_URI'];
-if (substr($request, -4) == '.php') {
-    $new_url = substr($request, 0, -4);
-    header("Location: $new_url", true, 301);
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rio Management System</title>
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        /* Fixed sidebar styles */
-        @media (min-width: 992px) {
-            .sidebar {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                z-index: 100;
-                padding: 48px 0 0;
-                box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-            }
-
-            .sidebar .nav-link {
-                font-weight: 500;
-                color: #333;
-            }
-
-            .main-content {
-                margin-left: 250px; /* Width of the sidebar */
-            }
+        /* Fixed navigation styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1030;
         }
 
-        /* Mobile responsiveness */
+        .content-wrapper {
+            margin-top: 80px; /* Adjust based on navbar height */
+            padding-top: 20px;
+        }
+
         @media (max-width: 991px) {
-            .sidebar {
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: -250px;
-                width: 250px;
-                z-index: 1050;
-                transition: left 0.3s ease;
-                background-color: #f8f9fa;
-            }
-
-            .sidebar.show {
-                left: 0;
-            }
-
-            .overlay {
-                display: none;
+            .navbar {
                 position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 1040;
+                z-index: 1030;
             }
-
-            .overlay.show {
-                display: block;
-            }
-
-            .navbar-brand h1 {
-                font-size: 1.30rem;
-                padding: 1rem;
+            
+            .navbar-collapse {
+                position: fixed;
+                top: 60px; /* Height of navbar */
+                left: 0;
+                width: 100%;
+                max-height: calc(100vh - 60px);
+                overflow-y: auto;
+                background-color: #212529; /* Dark background to match navbar */
             }
         }
 
-        /* Dropdown menu styles */
         .dropdown-menu {
             background-color: #14165b;
         }
@@ -95,100 +65,95 @@ if (substr($request, -4) == '.php') {
     </style>
 </head>
 <body>
-    <!-- Mobile Toggle Button -->
-    <button class="btn btn-primary d-lg-none sidebar-toggle" type="button">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Overlay for mobile menu -->
-    <div class="overlay"></div>
-
-    <!-- Sidebar Navigation -->
-    <div class="sidebar bg-light">
-        <div class="position-sticky">
-            <a href="index.php" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
-                <h1 class="m-0 text-primary text-uppercase display-6">Rio Management System</h1>
-            </a>
-
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a href="https://rio-lawis.com/" class="nav-link active">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="about.php" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="service.php" class="nav-link">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a href="room.php" class="nav-link">Rooms</a>
-                </li>
-                <li class="nav-item">
-                    <a href="contact.php" class="nav-link">Contact</a>
-                </li>
-                <li class="nav-item">
-                    <a href="check_status.php" class="nav-link">Status</a>
-                </li>
-                
-                <!-- Login Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
-                        <span class="fw-bold">Login</span>
+    <!-- Navigation Start -->
+    <div class="container-fluid bg-dark px-0">
+        <div class="row gx-0">
+            <div class="col-lg-6 bg-dark d-none d-lg-block">
+                <a href="index.php" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
+                    <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <nav class="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0">
+                    <a href="index.php" class="navbar-brand d-block d-lg-none">
+                        <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
                     </a>
-                    <ul class="dropdown-menu dropdown-user" id="loginDropdown">
-                        <li><a class="dropdown-item" href="admin">
-                            <i class="fas fa-user-shield"></i> Admin
-                        </a></li>
-                        <li><a class="dropdown-item" href="staff">
-                            <i class="fas fa-user-tie"></i> Staff
-                        </a></li>
-                        <li><a class="dropdown-item" href="customer">
-                            <i class="fas fa-users"></i> Customer
-                        </a></li>
-                    </ul>
-                </li>
-            </ul>
+                    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                        <div class="navbar-nav mr-auto py-0">
+                            <a href="https://rio-lawis.com/" class="nav-item nav-link active">Home</a>
+                            <a href="about.php" class="nav-item nav-link">About</a>
+                            <a href="service.php" class="nav-item nav-link">Services</a>
+                            <a href="room.php" class="nav-item nav-link">Rooms</a>         
+                            <a href="contact.php" class="nav-item nav-link">Contact</a>
+                            <a href="check_status.php" class="nav-item nav-link">Status</a>
+                            
+                            <div class="container">
+                                <ul class="navbar-nav ms-auto">
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle profile-pic" href="#" id="loginTrigger" role="button">
+                                            <span class="fw-bold">Login</span>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-user animated fadeIn" id="loginDropdown">
+                                            <div class="dropdown-user-scroll scrollbar-outer">
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="admin">
+                                                    <i class="fas fa-user-shield"></i> Admin
+                                                </a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="staff">
+                                                    <i class="fas fa-user-tie"></i> Staff
+                                                </a> 
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="customer">
+                                                    <i class="fas fa-users"></i> Customer
+                                                </a>
+                                            </div>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
         </div>
     </div>
+    <!-- Navigation End -->
 
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <!-- Your page content goes here -->
+    <!-- Main Content Start -->
+    <div class="container-fluid content-wrapper">
+        <div class="row">
+            <div class="col-12">
+                <h1>Welcome to Rio Management System</h1>
+                <p>This is the main content of your page. Add your specific content here.</p>
+                
+                <!-- Add more content as needed -->
+            </div>
+        </div>
     </div>
+    <!-- Main Content End -->
 
-    <!-- Bootstrap JS and dependencies -->
+    <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const sidebar = document.querySelector('.sidebar');
-            const sidebarToggle = document.querySelector('.sidebar-toggle');
-            const overlay = document.querySelector('.overlay');
-
-            // Mobile menu toggle
-            sidebarToggle.addEventListener('click', function () {
-                sidebar.classList.toggle('show');
-                overlay.classList.toggle('show');
-            });
-
-            // Close sidebar when clicking overlay
-            overlay.addEventListener('click', function () {
-                sidebar.classList.remove('show');
-                overlay.classList.remove('show');
-            });
-
-            // Login dropdown toggle
             const loginTrigger = document.getElementById('loginTrigger');
             const loginDropdown = document.getElementById('loginDropdown');
 
+            // Toggle the dropdown on click
             loginTrigger.addEventListener('click', function (e) {
                 e.preventDefault();
-                loginDropdown.classList.toggle('show');
+                loginDropdown.style.display = loginDropdown.style.display === 'none' ? 'block' : 'none';
             });
 
             // Close dropdown if clicked outside
             document.addEventListener('click', function (e) {
                 if (!loginTrigger.contains(e.target) && !loginDropdown.contains(e.target)) {
-                    loginDropdown.classList.remove('show');
+                    loginDropdown.style.display = 'none';
                 }
             });
         });
