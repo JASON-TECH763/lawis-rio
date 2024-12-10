@@ -166,10 +166,10 @@ while ($row = $result->fetch_assoc()) {
                             <div class="card card-stats card-round"  style="background-color: #2a2f5b;" >
                                 <div class="card-body">
                                     <div class="row align-items-center">
-                                        <div class="col-icon">
-                                            <div class="icon-big text-center icon-warning bubble-shadow-small"  style="background-color: #FEA116;">
-                                                <i class="fas fa-dollar-sign"></i>
-                                            </div>
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-warning bubble-shadow-small" style="background-color: #FEA116;">
+                                         <span style="font-size: 24px; color: white;">₱</span>
+                                        </div>
                                         </div>
                                         <div class="col col-stats ms-3 ms-sm-0">
                                             <div class="numbers">
@@ -204,10 +204,10 @@ while ($row = $result->fetch_assoc()) {
                             <div class="card card-stats card-round" style="background-color: #2a2f5b;">
                                 <div class="card-body">
                                     <div class="row align-items-center">
-                                        <div class="col-icon">
-                                            <div class="icon-big text-center icon-warning bubble-shadow-small" style="background-color: #FEA116;">
-                                                <i class="fas fa-dollar-sign"></i>
-                                            </div>
+                                    <div class="col-icon">
+                                        <div class="icon-big text-center icon-warning bubble-shadow-small" style="background-color: #FEA116;">
+                                         <span style="font-size: 24px; color: white;">₱</span>
+                                        </div>
                                         </div>
                                         <div class="col col-stats ms-3 ms-sm-0">
                                             <div class="numbers">
