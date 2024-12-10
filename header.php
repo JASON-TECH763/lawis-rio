@@ -51,7 +51,7 @@
 <body>
     <div class="container-fluid bg-dark px-0">
         <div class="row gx-0">
-            <div class="col-lg-6 bg-dark d-flex align-items-center position-relative">
+            <div class="col-lg-6 bg-dark d-flex align-items-center">
                 <!-- Brand and Toggle Button Container -->
                 <div class="navbar-brand-container">
                     <a href="index.php" class="navbar-brand m-0 p-0 d-flex align-items-center">
