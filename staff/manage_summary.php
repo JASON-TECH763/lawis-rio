@@ -8,7 +8,8 @@ if (!isset($_SESSION['uname'])) {
     exit();
 }
 
-
+// Set timezone to Philippines
+date_default_timezone_set('Asia/Manila');
 // Include PHPMailer
 require 'phpmailer/vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
@@ -21,15 +22,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $action = $_POST['action'];
 
     // Fetch the order details based on order_id
-    $sql = "SELECT o.*, c.email, c.name 
-            FROM orders o 
-            JOIN customer c ON o.customer_id = c.id 
-            WHERE o.order_id=?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param('i', $order_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $order = $result->fetch_assoc();
+$sql = "SELECT o.*, c.email, c.name, o.reserve_date, o.reserve_time
+FROM orders o
+JOIN customer c ON o.customer_id = c.id
+WHERE o.order_id=?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('i', $order_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$order = $result->fetch_assoc();
 
     if (!$order) {
         echo '<script>
@@ -71,8 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $product_details = "";
     while ($product = $result_products->fetch_assoc()) {
         $product_details .= "<p><strong>Product Name:</strong> {$product['prod_name']}<br>
-                             <strong>Quantity:</strong> {$product['quantity']}<br>
-                             <strong>Price:</strong> ₱" . number_format($product['prod_price'], 2) . "</p>";
+        <strong>Quantity:</strong> {$product['quantity']}<br>
+        <strong>Price:</strong> ₱" . number_format($product['prod_price'], 2) . "</p>";
     }
 
     // PHPMailer setup
@@ -138,15 +139,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Prepare and send confirmation email
         $subject = "Reservation Confirmed";
         $body = "<html><body>
-                 <h2>Reservation Confirmed</h2>
-                 <p>Dear {$order['name']},</p>
-                 <p>Your reservation for food and drinks has been confirmed. We look forward to serving you!</p>
-                 <p><strong>Order Date:</strong> " . date('Y-m-d H:i:s', strtotime($order_date)) . "</p>
-                 <p><strong>Total Price:</strong> ₱" . number_format($total_price, 2) . "</p>
-                 <h3>Product Details:</h3>
-                 $product_details
-                 <p>Thank you for choosing our service.</p>
-                 </body></html>";
+        <h2>Reservation Confirmed</h2>
+        <p>Dear {$order['name']},</p>
+        <p>Your reservation for food and drinks has been confirmed. We look forward to serving you!</p>
+        <p><strong>Order Date:</strong> " . date('Y-m-d H:i:s', strtotime($order_date)) . "</p>
+        <p><strong>Total Price:</strong> ₱" . number_format($total_price, 2) . "</p>
+        <h3>Product Details:</h3>
+        $product_details
+        <p>Thank you for choosing our service.</p>
+        </body></html>"; 
         sendEmail($order, $subject, $body);
 
         // Success notification with SweetAlert for confirmation
@@ -279,7 +280,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <th>Order ID</th>
                                             <th>Order Date</th>
                                             <th>Email</th>
-                                            <th>Total Price</th> <!-- Added Total Price Column -->
+                                            <th>Reserve Date</th>
+                                            <th>Reserve Time</th>
+                                            <th>Total Price (₱)</th> <!-- Added Total Price Column -->
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -288,9 +291,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <?php
     // Fetch order summary with customer email
     $sql_orders = "
-    SELECT o.order_id, o.order_date, o.status, c.email AS customer_email 
+    SELECT o.order_id, o.order_date, o.reserve_date, o.reserve_time, o.status, c.email AS customer_email 
     FROM orders o
     JOIN customer c ON o.customer_id = c.id
+    WHERE o.status != 'Temporary'
     ORDER BY o.order_date DESC";
 $result_orders = $conn->query($sql_orders);
 if ($result_orders->num_rows > 0) {
@@ -299,10 +303,11 @@ if ($result_orders->num_rows > 0) {
         ?>
             <tr>
                 <td><?php echo $row['order_id']; ?></td>
-                <td><?php echo date('Y-m-d H:i:s', strtotime($row['order_date'])); ?></td>
-                
+                <td><?php echo date('Y-m-d h:i A', strtotime($row['order_date'])); ?></td>
                 <td><?php echo htmlspecialchars($row['customer_email']); ?></td>
-                
+                <td><?php echo date('Y-m-d', strtotime($row['reserve_date'])); ?></td>  <!-- Reserve Date -->
+                <td><?php echo date('h:i A', strtotime($row['reserve_time'])); ?></td>  <!-- Reserve Time -->
+
                 <!-- Calculate total price for each order -->
                 <?php
                 $sql_products = "SELECT prod_name, prod_price, quantity FROM order_details WHERE order_id=?"; // Add prod_name to query
@@ -319,7 +324,7 @@ if ($result_orders->num_rows > 0) {
                 ?>
 
                 <!-- Display total price for the order -->
-                <td><?php echo number_format($order_total_price, 2); ?></td>
+                <td>₱<?php echo number_format($order_total_price, 2); ?></td>
                 <td >
                 <?php 
     $status = strtolower($row['status']);  // Convert the status to lowercase for case-insensitive comparison
@@ -336,35 +341,50 @@ if ($result_orders->num_rows > 0) {
 
                          
                      </td>
-                <td>
-                    <div class="btn-group dropstart">
-                        <button type="button" class="btn btn-primary btn-border dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Action
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li>
-                            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" style="display: inline;">
-                            <input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
-                            <input type="hidden" name="action" value="confirm">
-                             <a class="dropdown-item" href="#"><button type="submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i>Confirm</button></a>
-                        </form>
-                            
-                                <div class="dropdown-divider"></div>
-                                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" style="display: inline;">
-                                    <input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
-                                    <input type="hidden" name="action" value="reject">
-                                    <a class="dropdown-item" href="#"><button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Reject</button>
-                                </form>
-                                <div class="dropdown-divider"></div>
-                                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" style="display: inline;">
-                                    <input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
-                                    <input type="hidden" name="action" value="delete">
-                                    <button type="submit" class="btn btn-warning btn-sm"><i class="fa fa-exclamation-circle"></i> Delete</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
+                     <td>
+    <div class="btn-group dropstart">
+        <button type="button" class="btn btn-primary btn-border dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Action
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <li>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" style="display: inline;">
+                    <input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
+                    <input type="hidden" name="action" value="confirm">
+                    <a class="dropdown-item" href="#"><button type="submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i>Confirm</button></a>
+                </form>
+                
+                <div class="dropdown-divider"></div>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" style="display: inline;">
+                    <input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
+                    <input type="hidden" name="action" value="reject">
+                    <a class="dropdown-item" href="#"><button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times"></i> Reject</button></a>
+                </form>
+
+                <div class="dropdown-divider"></div>
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" style="display: inline;">
+                    <input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
+                    <input type="hidden" name="action" value="delete">
+                    <button type="submit" class="btn btn-warning btn-sm"><i class="fa fa-exclamation-circle"></i> Delete</button>
+                </form>
+
+                <div class="dropdown-divider"></div>
+                <!-- Payment Action -->
+                <form method="get" action="payment.php" target="_blank" style="display: inline;">
+                    <input type="hidden" name="order_id" value="<?php echo $row['order_id']; ?>">
+                    <?php
+                    $status = strtolower($row['status']);
+                    if ($status == 'confirmed') {
+                        echo '<button type="submit" class="btn btn-info btn-sm"><i class="fa fa-credit-card"></i> Payment</button>';
+                    } else {
+                        echo '<button type="submit" class="btn btn-info btn-sm" disabled title="Payment available after confirmation"><i class="fa fa-credit-card"></i> Payment</button>';
+                    }
+                    ?>
+                </form>
+            </li>
+        </ul>
+    </div>
+</td>
             </tr>
 
             <!-- Nested table for product details -->
@@ -372,12 +392,12 @@ if ($result_orders->num_rows > 0) {
                 <td colspan="6">
                     <table class="table table-bordered">
                         <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th>Product Price</th>
-                                <th>Quantity</th>
-                                <th>Subtotal</th> <!-- Added Subtotal column -->
-                            </tr>
+                        <tr>
+            <th>Product Name</th>
+            <th>Product Price (₱)</th>
+            <th>Quantity</th>
+            <th>Subtotal (₱)</th>
+                        </tr>
                         </thead>
                         <tbody>
                             <?php
@@ -389,12 +409,12 @@ if ($result_orders->num_rows > 0) {
                                 while ($product = $result_products->fetch_assoc()) {
                                     $subtotal = $product['prod_price'] * $product['quantity'];
                                     ?>
-                                    <tr>
-                                        <td><?php echo $product['prod_name']; ?></td> <!-- Now it should work fine -->
-                                        <td><?php echo number_format($product['prod_price'], 2); ?></td>
-                                        <td><?php echo $product['quantity']; ?></td>
-                                        <td><?php echo number_format($subtotal, 2); ?></td> <!-- Display subtotal for each product -->
-                                    </tr>
+                                   <tr>
+            <td><?php echo $product['prod_name']; ?></td>
+            <td>₱<?php echo number_format($product['prod_price'], 2); ?></td>
+            <td><?php echo $product['quantity']; ?></td>
+            <td>₱<?php echo number_format($subtotal, 2); ?></td>
+        </tr>
                                     <?php
                                 }
                             } else {
