@@ -114,7 +114,7 @@ while ($product = $result_products->fetch_assoc()) {
         </div>
 
        <!-- Order & Customer Details -->
-<p><strong>Order Date:</strong> <?php echo date('Y-m-d H:i:s', strtotime($order['order_date'])); ?></p>
+<p><strong>Order Date:</strong> <?php echo date('Y-m-d', strtotime($order['order_date'])); ?></p>
 <p><strong>Reserve Date:</strong> <?php echo date('F d, Y', strtotime($order['reserve_date'])); ?></p>
 <p><strong>Reserve Time:</strong> <?php echo date('h:i A', strtotime($order['reserve_time'])); ?></p>
 <p><strong>Customer Name:</strong> <?php echo htmlspecialchars($order['name']); ?></p>
