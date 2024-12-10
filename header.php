@@ -37,11 +37,14 @@
 
         /* Ensure the toggle button stays in position */
         .navbar-toggler {
-            position: absolute;
-            right: 20px; /* Adjust as needed */
-            top: 50%; /* Center vertically */
-            transform: translateY(-50%); /* Center vertically */
-            z-index: 1;
+            margin-left: auto; /* Align to the right of the brand */
+        }
+
+        .navbar-brand-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
     </style>
 </head>
@@ -49,14 +52,16 @@
     <div class="container-fluid bg-dark px-0">
         <div class="row gx-0">
             <div class="col-lg-6 bg-dark d-flex align-items-center position-relative">
-                <!-- Brand and Toggle Button -->
-                <a href="index.php" class="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center">
-                    <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
-                </a>
-                <!-- Toggle button visible only on mobile -->
-                <button type="button" class="navbar-toggler ms-3 d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <!-- Brand and Toggle Button Container -->
+                <div class="navbar-brand-container">
+                    <a href="index.php" class="navbar-brand m-0 p-0 d-flex align-items-center">
+                        <h1 class="m-0 text-primary text-uppercase display-6 display-md-4">Rio Management System</h1>
+                    </a>
+                    <!-- Toggle button visible only on mobile -->
+                    <button type="button" class="navbar-toggler d-lg-none" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
             </div>
             <div class="col-lg-6">
                 <!-- Navbar -->
