@@ -12,25 +12,25 @@ RewriteRule ^index\.php$ - [L]
 # If you want to serve the default page when accessing the domain root
 RewriteRule ^$ index.php [L]
 
-# Remove .php extension from URLs in the root directory
+# Remove .php extension from URLs globally
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^([^/]+)$ $1.php [L]
+RewriteRule ^([^\.]+)$ $1.php [L]
 
-# Remove .php extension from URLs in the admin directory
+# Specific rule for the admin directory
 RewriteCond %{REQUEST_URI} ^/admin/
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^admin/([^/]+)$ admin/$1.php [L]
+RewriteRule ^admin/([^\.]+)$ admin/$1.php [L]
 
-# Remove .php extension from URLs in the staff directory
+# Specific rule for the staff directory
 RewriteCond %{REQUEST_URI} ^/staff/
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^staff/([^/]+)$ staff/$1.php [L]
+RewriteRule ^staff/([^\.]+)$ staff/$1.php [L]
 
-# Remove .php extension from URLs in the customer directory
+# Specific rule for the customer directory
 RewriteCond %{REQUEST_URI} ^/customer/
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^customer/([^/]+)$ customer/$1.php [L]
+RewriteRule ^customer/([^\.]+)$ customer/$1.php [L]
