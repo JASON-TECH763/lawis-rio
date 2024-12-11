@@ -72,7 +72,7 @@
                     <div class="col-lg-6">
                         <h6 class="section-title text-start text-primary text-uppercase">About Us</h6>
                         <h1 class="mb-4">Welcome to <span class="text-primary text-uppercase">RIO GUESTHOUSE</span></h1>
-                        <p class="mb-4">Your home away from home in the heart of Rio de Janeiro. Nestled in the vibrant city center, our guesthouse offers a luxurious and comfortable stay for travelers from around the world. Whether you're here for business or leisure, our dedicated staff is committed to ensuring you have a memorable experience. Discover our beautifully appointed rooms, exceptional amenities, and personalized service that makes Rio Guesthouse the perfect choice for your stay in Rio.</p>
+                        <p class="mb-4">Your home away from home in the heart of Jose T. Rio. Nestled in the vibrant city center, our guesthouse offers a luxurious and comfortable stay for travelers from around the world. Whether you're here for business or leisure, our dedicated staff is committed to ensuring you have a memorable experience. Discover our beautifully appointed rooms, exceptional amenities, and personalized service that makes Rio Guesthouse the perfect choice for your stay in Rio.</p>
                         <div class="row g-3 pb-4">
                             <div class="col-sm-4 wow fadeIn" data-wow-delay="0.1s">
                                 <div class="border rounded p-1">
