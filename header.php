@@ -7,7 +7,7 @@ if (substr($request, -4) == '.php') {
 }
 ?>
 
-
+<style>
 .navbar-brand h1 {
     margin: 0;
     text-transform: uppercase;
